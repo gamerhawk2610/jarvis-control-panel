@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#03101d">
+<title>JARVIS — Personal AI Interface</title>
+<style>
+:root{--cyan:#38cfff;--blue:#087cff;--ink:#04111f;--panel:rgba(4,22,40,.78);--line:rgba(56,207,255,.55);--muted:#8dbbd0}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% 38%,#0b3150 0,#06182a 38%,#020812 78%);color:#eafaff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(56,207,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(56,207,255,.08) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+.wrap{max-width:760px;margin:auto;position:relative}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 4px 14px;border-bottom:1px solid var(--line)}
+.brand{font-size:clamp(25px,7vw,38px);font-weight:900;letter-spacing:.12em;font-style:italic;text-shadow:0 0 18px #20baff}
+.sub{font-size:10px;letter-spacing:.28em;color:var(--muted)}
+.status{font-size:10px;letter-spacing:.12em;color:#59ffd2;text-align:right}
+.status:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#39ffc6;box-shadow:0 0 10px #39ffc6;margin-right:7px}
+.hero{display:grid;place-items:center;padding:24px 0 12px}
+.reactor{width:min(66vw,270px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;position:relative;background:repeating-radial-gradient(circle,transparent 0 42px,rgba(42,188,255,.18) 43px 45px,transparent 46px 57px);filter:drop-shadow(0 0 18px #087cff)}
+.reactor:before,.reactor:after{content:"";position:absolute;inset:7%;border:2px solid rgba(48,198,255,.72);border-radius:50%;box-shadow:inset 0 0 22px #087cff,0 0 20px #087cff;animation:spin 18s linear infinite}
+.reactor:after{inset:19%;border-style:dashed;animation-direction:reverse;animation-duration:12s}
+.core{width:37%;aspect-ratio:1;background:radial-gradient(circle,#fff 0,#a7f5ff 17%,#16bfff 43%,#0458c4 72%,transparent 74%);clip-path:polygon(50% 0,95% 25%,95% 75%,50% 100%,5% 75%,5% 25%);box-shadow:0 0 35px #36dfff;animation:pulse 2.4s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(.9);filter:brightness(1.5)}}
+.greeting{text-align:center;margin-top:12px;color:#8bdfff;font-size:12px;letter-spacing:.18em}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px;margin:14px 0;box-shadow:0 0 22px rgba(0,133,255,.13),inset 0 0 18px rgba(0,133,255,.06);backdrop-filter:blur(12px)}
+.panel h2{margin:0 0 12px;color:var(--cyan);font-size:12px;letter-spacing:.18em;font-weight:700}
+.response{min-height:70px;font-size:17px;line-height:1.45}
+textarea{width:100%;resize:vertical;min-height:76px;background:rgba(0,8,18,.75);border:1px solid rgba(56,207,255,.4);border-radius:10px;padding:13px;color:white;font:inherit;outline:none}
+textarea:focus{border-color:var(--cyan);box-shadow:0 0 12px rgba(56,207,255,.2)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+button,.launch{border:1px solid var(--line);background:linear-gradient(135deg,rgba(5,90,160,.65),rgba(2,26,48,.9));color:#eafaff;border-radius:11px;padding:13px 10px;font-weight:700;letter-spacing:.06em;text-align:center;text-decoration:none;font-size:12px;cursor:pointer}
+button:active,.launch:active{transform:scale(.98)}
+.primary{background:linear-gradient(135deg,#087fc4,#03417b);box-shadow:0 0 16px rgba(22,175,255,.25)}
+.microw{display:flex;justify-content:center;margin:18px 0 6px}
+.mic{width:76px;height:76px;border-radius:50%;font-size:27px;padding:0;border:2px solid #39cfff;box-shadow:0 0 20px rgba(27,183,255,.35);background:radial-gradient(circle,#0d5a91,#03172b 70%)}
+.small{font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.tile{border:1px solid rgba(56,207,255,.3);border-radius:10px;padding:12px 6px;text-align:center;background:rgba(0,18,34,.55);font-size:11px;color:#bdefff}
+.tile b{display:block;font-size:17px;color:var(--cyan);margin-bottom:4px}
+footer{text-align:center;padding:18px 0 28px;color:#5ee8d1;font-size:12px;letter-spacing:.22em}
+@media(min-width:620px){.hero{padding:30px 0 16px}.panel{padding:20px}.response{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div><div class="brand">JARVIS</div><div class="sub">PERSONAL AI INTERFACE</div></div><div class="status" id="status">SYSTEMS READY</div></header>
+<section class="hero"><div class="reactor" aria-label="Animated reactor"><div class="core"></div></div><div class="greeting">GOOD DAY, SIR · AWAITING INSTRUCTIONS</div></section>
+<section class="panel"><h2>JARVIS RESPONSE</h2><div class="response" id="response" aria-live="polite">At your service, sir. How may I assist you?</div></section>
+<section class="panel"><h2>COMMAND CONSOLE</h2><textarea id="command" placeholder="Enter a command…"></textarea><div class="actions"><button class="primary" id="speakBtn">▶ SPEAK RESPONSE</button><a class="launch" href="shortcuts://run-shortcut?name=JARVIS">◉ LAUNCH JARVIS SHORTCUT</a></div><div class="microw"><button class="mic" id="micBtn" aria-label="Start voice input">🎙</button></div><div class="small" id="hint">Tap the microphone for browser voice input, or launch your JARVIS Shortcut for the ChatGPT conversation.</div></section>
+<section class="panel"><h2>SYSTEM OVERVIEW</h2><div class="grid"><div class="tile"><b>●</b>CORE ONLINE</div><div class="tile"><b>VOICE</b>READY</div><div class="tile"><b>AI</b>SHORTCUT</div></div></section>
+<footer>JARVIS ONLINE · YOUR PERSONAL ASSISTANT</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const status=$('status'),response=$('response'),command=$('command'),hint=$('hint');
+function say(text){if(!('speechSynthesis'in window)){hint.textContent='Speech output is not supported in this browser.';return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=.9;u.pitch=.82;const voices=speechSynthesis.getVoices();const v=voices.find(x=>/Daniel/i.test(x.name))||voices.find(x=>/en-GB/i.test(x.lang));if(v)u.voice=v;speechSynthesis.speak(u);}
+$('speakBtn').addEventListener('click',()=>say(response.textContent));
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+$('micBtn').addEventListener('click',()=>{
+ if(!SR){hint.textContent='Voice capture is unavailable in this browser. You can type a command or use Launch JARVIS Shortcut.';return;}
+ const rec=new SR();rec.lang='en-GB';rec.interimResults=false;rec.maxAlternatives=1;
+ status.textContent='LISTENING';hint.textContent='Listening…';rec.onresult=e=>{command.value=e.results[0][0].transcript;response.textContent='Command captured: '+command.value+'. To get an AI answer, launch your JARVIS Shortcut.';status.textContent='COMMAND CAPTURED';};rec.onerror=e=>{status.textContent='VOICE UNAVAILABLE';hint.textContent='Microphone issue: '+e.error+'. Check Safari microphone permission.';};rec.onend=()=>{if(status.textContent==='LISTENING')status.textContent='SYSTEMS READY';};try{rec.start();}catch(e){status.textContent='SYSTEMS READY';hint.textContent='Could not start microphone. Try again or use the shortcut.';}
+});
+command.addEventListener('input',()=>{if(command.value.trim()){response.textContent='Command ready: '+command.value.trim();}});
+if('speechSynthesis'in window)speechSynthesis.onvoiceschanged=()=>{};
+</script>
+</body></html>
